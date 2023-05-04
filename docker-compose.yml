@@ -1,61 +1,50 @@
 version: '2.3'
 
+x-environment:
+  &default-environment
+  # Route that should be used locally, if you are using pygmy, this route *must* end with .docker.amazee.io
+  LAGOON_ROUTE: &default-url http://${COMPOSE_PROJECT_NAME:-lagoon-wagtail-example}.docker.amazee.io
+  DATABASE_URL: postgres://${POSTGRES_USERNAME:-lagoon}:${POSTGRES_PASSWORD:-lagoon}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DATABASE:-lagoon}
+  # Uncomment if you like to have the system behave like in production
+  #LAGOON_ENVIRONMENT_TYPE: production
+  # Uncomment to enable xdebug and then restart via `docker-compose up -d`
+  #XDEBUG_ENABLE: "true"
+
 volumes:
   postgres-data:
-  node_modules:
-  
+  wagtail-media:
+
 services:
-  web:
-    container_name: "web"
-    build: ./
+  python:
+    build:
+      context: .
+      dockerfile: lagoon/Dockerfile
     labels:
       lagoon.type: python
-    working_dir: /code/bakerydemo
-    command: >
-      bash -c "python manage.py migrate
-      && python manage.py load_initial_data
-      && python manage.py update_index
-      && python manage.py runserver 0.0.0.0:8000"
-    restart: "no"
-    volumes:
-      - ./wagtail:/code/wagtail:delegated,rw
-      - ./bakerydemo:/code/bakerydemo:delegated,rw
-      - node_modules:/code/wagtail/node_modules/
     ports:
-      - "8000:8000"
+      - "8800"
     environment:
-      DATABASE_URL: "postgres://wagtail:changeme@db/wagtail"
-      PYTHONPATH: "/code/wagtail:/code/bakerydemo:$PYTHONPATH"
+      << : *default-environment
+      PYTHONPATH: "/code/mysite:/mysite:$PYTHONPATH"
+    volumes:
+      - ./mysite:/code/mysite:delegated
+#      - wagtail-media:/code/mysite/media # Enable this to store media locally in a volume
     depends_on:
-      - db
-      - frontend
+      - postgres
+    networks:
+      - amazeeio-network
+      - default
 
-  db:
-    container_name: "db"
-    image: postgres:12.3-alpine
-    environment:
-      POSTGRES_USER: wagtail
-      POSTGRES_DB: wagtail
-      POSTGRES_PASSWORD: changeme
+  postgres:
+    image: uselagoon/postgres-15:latest
     labels:
       lagoon.type: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: "no"
-    expose:
+    ports:
       - "5432"
 
-  frontend:
-    container_name: "frontend"
-    labels:
-      lagoon.type: node
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    working_dir: /code/wagtail
-    volumes:
-      - ./wagtail:/code/wagtail:delegated,rw
-      - node_modules:/code/wagtail/node_modules/
-    command: bash -c "echo 'Copying node_modules, this may take a few minutes...' && rsync -rah --info=progress2 /node_modules /code/wagtail/ && npm run start"
-    restart: "no"
-    tty: true
+networks:
+  amazeeio-network:
+    external: true
