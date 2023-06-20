@@ -17,8 +17,8 @@ docker-compose down
 docker-compose build && docker-compose up -d
 
 # Ensure postgres and python pods are ready to connect
-docker run --rm --net lagoon-wagtail-example_default amazeeio/dockerize dockerize -wait tcp://postgres:5432 -timeout 1m
-docker run --rm --net lagoon-wagtail-example_default amazeeio/dockerize dockerize -wait tcp://python:8800 -timeout 1m
+docker run --rm --net wagtail-example_default amazeeio/dockerize dockerize -wait tcp://postgres:5432 -timeout 1m
+docker run --rm --net wagtail-example_default amazeeio/dockerize dockerize -wait tcp://python:8800 -timeout 1m
 ```
 
 Verification commands
@@ -28,8 +28,8 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=lagoon-wagtail-example | grep Up | grep lagoon-wagtail-example_python_1
-docker ps --filter label=com.docker.compose.project=lagoon-wagtail-example | grep Up | grep lagoon-wagtail-example_postgres_1
+docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example_python_1
+docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example_postgres_1
 
 # Should ssh against the python container by default
 docker-compose exec -T python sh -c "env | grep LAGOON=" | grep python
