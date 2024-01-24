@@ -14,10 +14,10 @@ The important files to examine are
 * Open up a command line prompt.
 * Clone the repo.
 * cd into the repo.
-* Run `docker-compose build` to build the containers
-* Run `docker-compose up -d` to stand up the wagtail stack
+* Run `docker compose build` to build the containers
+* Run `docker compose up -d` to stand up the wagtail stack
 
-You can interact with your site using `docker-compose exec python sh` and `/code/mysite/manage.py` to see the admin options for wagtail
+You can interact with your site using `docker compose exec python sh` and `/code/mysite/manage.py` to see the admin options for wagtail
 
 ## Included Services
 

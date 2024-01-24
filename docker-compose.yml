@@ -7,7 +7,7 @@ x-environment:
   DATABASE_URL: postgres://${POSTGRES_USERNAME:-lagoon}:${POSTGRES_PASSWORD:-lagoon}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DATABASE:-lagoon}
   # Uncomment if you like to have the system behave like in production
   #LAGOON_ENVIRONMENT_TYPE: production
-  # Uncomment to enable xdebug and then restart via `docker-compose up -d`
+  # Uncomment to enable xdebug and then restart via `docker compose up -d`
   #XDEBUG_ENABLE: "true"
 
 volumes:
