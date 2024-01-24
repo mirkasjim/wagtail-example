@@ -28,8 +28,8 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # Should have all the services we expect
-docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example_python_1
-docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example_postgres_1
+docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example-python-1
+docker ps --filter label=com.docker.compose.project=wagtail-example | grep Up | grep wagtail-example-postgres-1
 
 # Should ssh against the python container by default
 docker compose exec -T python sh -c "env | grep LAGOON=" | grep python
