@@ -27,8 +27,6 @@ jobs:
         python jur.py  
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: "0"
 
 #        wget https://files.lando.dev/installer/lando-x64-stable.deb
 #        sudo dpkg --ignore-depends=docker-ce -i lando-x64-stable.deb
